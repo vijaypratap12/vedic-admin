@@ -110,11 +110,7 @@ export const getChapterById = async (id) => {
  * @returns {Promise<Object>} Created chapter
  */
 export const createChapter = async (bookId, chapterData) => {
-  const payload = {
-    ...chapterData,
-    bookId: bookId,
-  };
-  const response = await apiClient.post('/Chapters', payload);
+  const response = await apiClient.post(`/Chapters/books/${bookId}`, chapterData);
   return response.data;
 };
 
