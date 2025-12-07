@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router-dom';
-import { BookOpen, FileText, LayoutDashboard } from 'lucide-react';
+import { BookOpen, FileText, LayoutDashboard, BookMarked, FileEdit } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import BooksPage from './pages/BooksPage';
 import ChaptersPage from './pages/ChaptersPage';
+import TextbooksPage from './pages/TextbooksPage';
+import TextbookChaptersPage from './pages/TextbookChaptersPage';
 import './styles/admin.css';
 
 function App() {
@@ -45,6 +47,24 @@ function App() {
                   Chapters
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/textbooks"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                >
+                  <BookMarked size={18} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                  Textbooks
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/textbook-chapters"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                >
+                  <FileEdit size={18} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                  Textbook Chapters
+                </NavLink>
+              </li>
             </ul>
           </div>
         </nav>
@@ -55,6 +75,9 @@ function App() {
           <Route path="/books" element={<BooksPage />} />
           <Route path="/books/:bookId/chapters" element={<ChaptersPage />} />
           <Route path="/chapters" element={<ChaptersPage />} />
+          <Route path="/textbooks" element={<TextbooksPage />} />
+          <Route path="/textbooks/:textbookId/chapters" element={<TextbookChaptersPage />} />
+          <Route path="/textbook-chapters" element={<TextbookChaptersPage />} />
         </Routes>
       </div>
     </Router>
