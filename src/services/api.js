@@ -281,6 +281,172 @@ export const deleteTextbookChapter = async (id) => {
   await apiClient.delete(`/TextbookChapters/${id}`);
 };
 
+// ============================================
+// RESEARCH PAPERS API
+// ============================================
+
+/**
+ * Get all research papers
+ * @returns {Promise<Array>} List of all research papers
+ */
+export const getAllResearchPapers = async () => {
+  const response = await apiClient.get('/ResearchPapers');
+  return response.data;
+};
+
+/**
+ * Get featured research papers
+ * @param {number} count - Number of featured papers to retrieve
+ * @returns {Promise<Array>} List of featured research papers
+ */
+export const getFeaturedResearchPapers = async (count = 3) => {
+  const response = await apiClient.get(`/ResearchPapers/featured?count=${count}`);
+  return response.data;
+};
+
+/**
+ * Get a research paper by ID
+ * @param {number} id - Research Paper ID
+ * @returns {Promise<Object>} Research paper details
+ */
+export const getResearchPaperById = async (id) => {
+  const response = await apiClient.get(`/ResearchPapers/${id}`);
+  return response.data;
+};
+
+/**
+ * Create a new research paper
+ * @param {Object} paperData - Research paper data
+ * @returns {Promise<Object>} Created research paper
+ */
+export const createResearchPaper = async (paperData) => {
+  const response = await apiClient.post('/ResearchPapers', paperData);
+  return response.data;
+};
+
+/**
+ * Update an existing research paper
+ * @param {number} id - Research Paper ID
+ * @param {Object} paperData - Updated research paper data
+ * @returns {Promise<Object>} Updated research paper
+ */
+export const updateResearchPaper = async (id, paperData) => {
+  const response = await apiClient.put(`/ResearchPapers/${id}`, paperData);
+  return response.data;
+};
+
+/**
+ * Delete a research paper
+ * @param {number} id - Research Paper ID
+ * @returns {Promise<void>}
+ */
+export const deleteResearchPaper = async (id) => {
+  await apiClient.delete(`/ResearchPapers/${id}`);
+};
+
+/**
+ * Get research papers by category
+ * @param {string} category - Category name
+ * @returns {Promise<Array>} List of research papers
+ */
+export const getResearchPapersByCategory = async (category) => {
+  const response = await apiClient.get(`/ResearchPapers/category/${encodeURIComponent(category)}`);
+  return response.data;
+};
+
+/**
+ * Search research papers
+ * @param {string} searchTerm - Search term
+ * @returns {Promise<Array>} List of matching research papers
+ */
+export const searchResearchPapers = async (searchTerm) => {
+  const response = await apiClient.get(`/ResearchPapers/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+  return response.data;
+};
+
+// ============================================
+// THESIS API
+// ============================================
+
+/**
+ * Get all thesis
+ * @returns {Promise<Array>} List of all thesis
+ */
+export const getAllThesis = async () => {
+  const response = await apiClient.get('/Thesis');
+  return response.data;
+};
+
+/**
+ * Get featured thesis
+ * @param {number} count - Number of featured thesis to retrieve
+ * @returns {Promise<Array>} List of featured thesis
+ */
+export const getFeaturedThesis = async (count = 3) => {
+  const response = await apiClient.get(`/Thesis/featured?count=${count}`);
+  return response.data;
+};
+
+/**
+ * Get a thesis by ID
+ * @param {number} id - Thesis ID
+ * @returns {Promise<Object>} Thesis details
+ */
+export const getThesisById = async (id) => {
+  const response = await apiClient.get(`/Thesis/${id}`);
+  return response.data;
+};
+
+/**
+ * Create a new thesis
+ * @param {Object} thesisData - Thesis data
+ * @returns {Promise<Object>} Created thesis
+ */
+export const createThesis = async (thesisData) => {
+  const response = await apiClient.post('/Thesis', thesisData);
+  return response.data;
+};
+
+/**
+ * Update an existing thesis
+ * @param {number} id - Thesis ID
+ * @param {Object} thesisData - Updated thesis data
+ * @returns {Promise<Object>} Updated thesis
+ */
+export const updateThesis = async (id, thesisData) => {
+  const response = await apiClient.put(`/Thesis/${id}`, thesisData);
+  return response.data;
+};
+
+/**
+ * Delete a thesis
+ * @param {number} id - Thesis ID
+ * @returns {Promise<void>}
+ */
+export const deleteThesis = async (id) => {
+  await apiClient.delete(`/Thesis/${id}`);
+};
+
+/**
+ * Get thesis by category
+ * @param {string} category - Category name
+ * @returns {Promise<Array>} List of thesis
+ */
+export const getThesisByCategory = async (category) => {
+  const response = await apiClient.get(`/Thesis/category/${encodeURIComponent(category)}`);
+  return response.data;
+};
+
+/**
+ * Search thesis
+ * @param {string} searchTerm - Search term
+ * @returns {Promise<Array>} List of matching thesis
+ */
+export const searchThesis = async (searchTerm) => {
+  const response = await apiClient.get(`/Thesis/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+  return response.data;
+};
+
 // Export all functions as default
 const apiService = {
   // Books
@@ -311,6 +477,24 @@ const apiService = {
   createTextbookChapter,
   updateTextbookChapter,
   deleteTextbookChapter,
+  // Research Papers
+  getAllResearchPapers,
+  getFeaturedResearchPapers,
+  getResearchPaperById,
+  createResearchPaper,
+  updateResearchPaper,
+  deleteResearchPaper,
+  getResearchPapersByCategory,
+  searchResearchPapers,
+  // Thesis
+  getAllThesis,
+  getFeaturedThesis,
+  getThesisById,
+  createThesis,
+  updateThesis,
+  deleteThesis,
+  getThesisByCategory,
+  searchThesis,
 };
 
 export default apiService;
