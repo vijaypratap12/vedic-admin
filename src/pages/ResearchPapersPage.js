@@ -15,6 +15,7 @@ const ResearchPapersPage = () => {
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [editingPaper, setEditingPaper] = useState(null);
+  const [previewPaper, setPreviewPaper] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
@@ -58,9 +59,27 @@ const ResearchPapersPage = () => {
     setShowModal(true);
   };
 
-  const handleEdit = (paper) => {
-    setEditingPaper(paper);
-    setShowModal(true);
+  const handleEdit = async (paper) => {
+    try {
+      // Fetch full paper details including contentHtml
+      const fullPaper = await apiService.getResearchPaperById(paper.id);
+      setEditingPaper(fullPaper);
+      setShowModal(true);
+    } catch (err) {
+      setError(err.message || 'Failed to load research paper details');
+      console.error('Error fetching research paper:', err);
+    }
+  };
+
+  const handlePreview = async (paper) => {
+    try {
+      // Fetch full paper details for preview
+      const fullPaper = await apiService.getResearchPaperById(paper.id);
+      setPreviewPaper(fullPaper);
+    } catch (err) {
+      setError(err.message || 'Failed to load research paper for preview');
+      console.error('Error fetching research paper:', err);
+    }
   };
 
   const handleDelete = async (paper) => {
@@ -308,8 +327,8 @@ const ResearchPapersPage = () => {
                     <div className="table-actions">
                       <button
                         className="btn btn-sm btn-outline"
-                        onClick={() => window.open(`${window.location.origin}/research#paper-${paper.id}`, '_blank')}
-                        title="View"
+                        onClick={() => handlePreview(paper)}
+                        title="Preview Research Paper"
                       >
                         <Eye size={14} />
                       </button>
@@ -347,6 +366,66 @@ const ResearchPapersPage = () => {
             setEditingPaper(null);
           }}
         />
+      )}
+
+      {/* Preview Modal */}
+      {previewPaper && (
+        <div className="modal-overlay" onClick={() => setPreviewPaper(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '1200px' }}>
+            <div className="modal-header">
+              <div>
+                <h2 className="modal-title">{previewPaper.title}</h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                  <strong>Authors:</strong> {Array.isArray(previewPaper.authors) ? previewPaper.authors.join(', ') : previewPaper.authors}
+                </p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                  <strong>Institution:</strong> {previewPaper.institution} • <strong>Year:</strong> {previewPaper.year}
+                </p>
+                {previewPaper.journalName && (
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                    <strong>Journal:</strong> {previewPaper.journalName}
+                    {previewPaper.volume && ` • Volume ${previewPaper.volume}`}
+                    {previewPaper.issueNumber && ` • Issue ${previewPaper.issueNumber}`}
+                  </p>
+                )}
+              </div>
+              <button className="modal-close" onClick={() => setPreviewPaper(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="modal-body">
+              {previewPaper.abstract && (
+                <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--surface-color)', borderRadius: '0.5rem' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem' }}>Abstract</h3>
+                  <p style={{ fontSize: '0.875rem', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+                    {previewPaper.abstract}
+                  </p>
+                </div>
+              )}
+              {previewPaper.keywords && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem' }}>Keywords</h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    {(Array.isArray(previewPaper.keywords) ? previewPaper.keywords : previewPaper.keywords.split(',')).map((keyword, index) => (
+                      <span key={index} className="badge badge-secondary">
+                        {keyword.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="preview-container">
+                <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>Full Content</h3>
+                <div dangerouslySetInnerHTML={{ __html: previewPaper.contentHtml }} />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline" onClick={() => setPreviewPaper(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

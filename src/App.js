@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router-dom';
-import { BookOpen, FileText, LayoutDashboard, BookMarked, FileEdit, FlaskConical, GraduationCap } from 'lucide-react';
+import { BookOpen, FileText, LayoutDashboard, BookMarked, FileEdit, FlaskConical, GraduationCap, MessageSquare, Mail } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import BooksPage from './pages/BooksPage';
 import ChaptersPage from './pages/ChaptersPage';
@@ -8,6 +8,8 @@ import TextbooksPage from './pages/TextbooksPage';
 import TextbookChaptersPage from './pages/TextbookChaptersPage';
 import ResearchPapersPage from './pages/ResearchPapersPage';
 import ThesisPage from './pages/ThesisPage';
+import ContactSubmissionsPage from './pages/ContactSubmissionsPage';
+import NewsletterSubscriptionsPage from './pages/NewsletterSubscriptionsPage';
 import './styles/admin.css';
 
 function App() {
@@ -85,6 +87,24 @@ function App() {
                   Thesis
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/contact-submissions"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                >
+                  <MessageSquare size={18} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                  Contact
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/newsletter-subscriptions"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                >
+                  <Mail size={18} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                  Newsletter
+                </NavLink>
+              </li>
             </ul>
           </div>
         </nav>
@@ -100,6 +120,8 @@ function App() {
           <Route path="/textbook-chapters" element={<TextbookChaptersPage />} />
           <Route path="/research-papers" element={<ResearchPapersPage />} />
           <Route path="/thesis" element={<ThesisPage />} />
+          <Route path="/contact-submissions" element={<ContactSubmissionsPage />} />
+          <Route path="/newsletter-subscriptions" element={<NewsletterSubscriptionsPage />} />
         </Routes>
       </div>
     </Router>

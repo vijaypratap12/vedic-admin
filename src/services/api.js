@@ -447,6 +447,119 @@ export const searchThesis = async (searchTerm) => {
   return response.data;
 };
 
+// ============================================
+// CONTACT SUBMISSIONS API
+// ============================================
+
+/**
+ * Get all contact submissions
+ * @returns {Promise<Array>} List of all contact submissions
+ */
+export const getAllContactSubmissions = async () => {
+  const response = await apiClient.get('/Contact');
+  return response.data;
+};
+
+/**
+ * Get contact submission by ID
+ * @param {string} id - Contact submission ID (GUID)
+ * @returns {Promise<Object>} Contact submission details
+ */
+export const getContactSubmissionById = async (id) => {
+  const response = await apiClient.get(`/Contact/${id}`);
+  return response.data;
+};
+
+/**
+ * Get contact submissions by status
+ * @param {string} status - Status (Pending, InProgress, Resolved, Closed)
+ * @returns {Promise<Array>} List of contact submissions
+ */
+export const getContactSubmissionsByStatus = async (status) => {
+  const response = await apiClient.get(`/Contact/status/${status}`);
+  return response.data;
+};
+
+/**
+ * Get contact submissions by type
+ * @param {string} type - Contact type
+ * @returns {Promise<Array>} List of contact submissions
+ */
+export const getContactSubmissionsByType = async (type) => {
+  const response = await apiClient.get(`/Contact/type/${type}`);
+  return response.data;
+};
+
+/**
+ * Update contact submission
+ * @param {string} id - Contact submission ID
+ * @param {Object} updateData - Update data
+ * @returns {Promise<Object>} Updated contact submission
+ */
+export const updateContactSubmission = async (id, updateData) => {
+  const response = await apiClient.put(`/Contact/${id}`, updateData);
+  return response.data;
+};
+
+/**
+ * Delete contact submission
+ * @param {string} id - Contact submission ID
+ * @returns {Promise<void>}
+ */
+export const deleteContactSubmission = async (id) => {
+  await apiClient.delete(`/Contact/${id}`);
+};
+
+// ============================================
+// NEWSLETTER SUBSCRIPTIONS API
+// ============================================
+
+/**
+ * Get all newsletter subscriptions
+ * @returns {Promise<Array>} List of all newsletter subscriptions
+ */
+export const getAllNewsletterSubscriptions = async () => {
+  const response = await apiClient.get('/Newsletter/active');
+  return response.data;
+};
+
+/**
+ * Get active newsletter subscriptions
+ * @returns {Promise<Array>} List of active newsletter subscriptions
+ */
+export const getActiveNewsletterSubscriptions = async () => {
+  const response = await apiClient.get('/Newsletter/active');
+  return response.data;
+};
+
+/**
+ * Get newsletter subscription by ID
+ * @param {string} id - Newsletter subscription ID (GUID)
+ * @returns {Promise<Object>} Newsletter subscription details
+ */
+export const getNewsletterSubscriptionById = async (id) => {
+  const response = await apiClient.get(`/Newsletter/${id}`);
+  return response.data;
+};
+
+/**
+ * Unsubscribe email from newsletter
+ * @param {string} id - Newsletter subscription ID
+ * @returns {Promise<void>}
+ */
+export const unsubscribeNewsletter = async (id) => {
+  await apiClient.post(`/Newsletter/${id}/unsubscribe`);
+};
+
+/**
+ * Delete newsletter subscription
+ * @param {string} id - Newsletter subscription ID
+ * @returns {Promise<void>}
+ */
+export const deleteNewsletterSubscription = async (id) => {
+  await apiClient.delete(`/Newsletter/${id}`);
+};
+
 // Export all functions as default
 const apiService = {
   // Books
@@ -495,6 +608,19 @@ const apiService = {
   deleteThesis,
   getThesisByCategory,
   searchThesis,
+  // Contact Submissions
+  getAllContactSubmissions,
+  getContactSubmissionById,
+  getContactSubmissionsByStatus,
+  getContactSubmissionsByType,
+  updateContactSubmission,
+  deleteContactSubmission,
+  // Newsletter Subscriptions
+  getAllNewsletterSubscriptions,
+  getActiveNewsletterSubscriptions,
+  getNewsletterSubscriptionById,
+  unsubscribeNewsletter,
+  deleteNewsletterSubscription,
 };
 
 export default apiService;

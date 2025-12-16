@@ -15,6 +15,7 @@ const ThesisPage = () => {
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [editingThesis, setEditingThesis] = useState(null);
+  const [previewThesis, setPreviewThesis] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
@@ -58,9 +59,27 @@ const ThesisPage = () => {
     setShowModal(true);
   };
 
-  const handleEdit = (thesis) => {
-    setEditingThesis(thesis);
-    setShowModal(true);
+  const handleEdit = async (thesis) => {
+    try {
+      // Fetch full thesis details including contentHtml
+      const fullThesis = await apiService.getThesisById(thesis.id);
+      setEditingThesis(fullThesis);
+      setShowModal(true);
+    } catch (err) {
+      setError(err.message || 'Failed to load thesis details');
+      console.error('Error fetching thesis:', err);
+    }
+  };
+
+  const handlePreview = async (thesis) => {
+    try {
+      // Fetch full thesis details for preview
+      const fullThesis = await apiService.getThesisById(thesis.id);
+      setPreviewThesis(fullThesis);
+    } catch (err) {
+      setError(err.message || 'Failed to load thesis for preview');
+      console.error('Error fetching thesis:', err);
+    }
   };
 
   const handleDelete = async (thesis) => {
@@ -309,8 +328,8 @@ const ThesisPage = () => {
                     <div className="table-actions">
                       <button
                         className="btn btn-sm btn-outline"
-                        onClick={() => window.open(`${window.location.origin}/research#thesis-${thesis.id}`, '_blank')}
-                        title="View"
+                        onClick={() => handlePreview(thesis)}
+                        title="Preview Thesis"
                       >
                         <Eye size={14} />
                       </button>
@@ -348,6 +367,68 @@ const ThesisPage = () => {
             setEditingThesis(null);
           }}
         />
+      )}
+
+      {/* Preview Modal */}
+      {previewThesis && (
+        <div className="modal-overlay" onClick={() => setPreviewThesis(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '1200px' }}>
+            <div className="modal-header">
+              <div>
+                <h2 className="modal-title">{previewThesis.title}</h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                  <strong>Author:</strong> {previewThesis.author}
+                </p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                  <strong>Institution:</strong> {previewThesis.institution} • <strong>Department:</strong> {previewThesis.department}
+                </p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                  <strong>Category:</strong> {previewThesis.category} • <strong>Year:</strong> {previewThesis.year}
+                  {previewThesis.grade && ` • Grade: ${previewThesis.grade}`}
+                </p>
+                {previewThesis.guideNames && (
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                    <strong>Guide(s):</strong> {Array.isArray(previewThesis.guideNames) ? previewThesis.guideNames.join(', ') : previewThesis.guideNames}
+                  </p>
+                )}
+              </div>
+              <button className="modal-close" onClick={() => setPreviewThesis(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="modal-body">
+              {previewThesis.abstract && (
+                <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--surface-color)', borderRadius: '0.5rem' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem' }}>Abstract</h3>
+                  <p style={{ fontSize: '0.875rem', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+                    {previewThesis.abstract}
+                  </p>
+                </div>
+              )}
+              {previewThesis.keywords && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem' }}>Keywords</h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    {(Array.isArray(previewThesis.keywords) ? previewThesis.keywords : previewThesis.keywords.split(',')).map((keyword, index) => (
+                      <span key={index} className="badge badge-secondary">
+                        {keyword.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="preview-container">
+                <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>Full Content</h3>
+                <div dangerouslySetInnerHTML={{ __html: previewThesis.contentHtml }} />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline" onClick={() => setPreviewThesis(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
